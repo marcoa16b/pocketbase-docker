@@ -1,10 +1,18 @@
 FROM alpine:3 as downloader
 
-ARG TARGETOS
-ARG TARGETARCH
-ARG VERSION
+ARG OS_TAR
+ARG ARCH_TAR
+ARG VERSION=0.2.8
 
-ENV BUILDX_ARCH="${TARGETOS:-linux}_${TARGETARCH:-amd64}"
+ENV BUILDX_ARCH="${OS_TAR:-linux}_${ARCH_TAR:-amd64}"
+
+# Install the dependencies
+RUN apk add --no-cache \
+    ca-certificates \
+    unzip \
+    wget \
+    zip \
+    zlib-dev
 
 RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${VERSION}/pocketbase_${VERSION}_${BUILDX_ARCH}.zip \
     && unzip pocketbase_${VERSION}_${BUILDX_ARCH}.zip \
